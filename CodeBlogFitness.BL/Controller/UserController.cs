@@ -14,10 +14,15 @@ namespace CodeBlogFitness.BL.Controller
         /// <summary>
         /// Создание нового контроллера пользователя.
         /// </summary>
-        /// <param name="user"></param>
-        public UserController(User user)
+        /// <param name="userName">Имя пользователя.</param>
+        /// <param name="genderName">Пол пользователя.</param>
+        /// <param name="birthDay">Дата рождения пользователя.</param>
+        /// <param name="weight">Вес пользователя.</param>
+        /// <param name="height">Рост пользователя</param>
+        public UserController(string userName, string genderName, DateTime birthDay, double weight, double height)
         {
-            User = user ?? throw new ArgumentNullException("Пользователь не может быть null", nameof(user));
+            //TODO: проверка
+            User = new User(userName, new Gender(genderName), birthDay, weight, height);
         }
         /// <summary>
         /// Пользователь приложения.
@@ -41,21 +46,22 @@ namespace CodeBlogFitness.BL.Controller
         /// </summary>
         /// <returns>Пользователь из файла.</returns>
         /// <exception cref="FileLoadException">Если файла users.dat нет.</exception>
-        public User Load()
+        public UserController()
         {
             if (File.Exists(UserPath))
             {
                 using BinaryReader reader = new BinaryReader(File.Open(UserPath, FileMode.Open));
-                User user = new User(
+                User = new User(
                     reader.ReadString(),
                     new Gender(reader.ReadString()),
                     DateTime.Parse(reader.ReadString()),
                     reader.ReadDouble(),
                     reader.ReadDouble());
-                return user;
             }
             else
                 throw new FileLoadException("Не удалось получить пользователя из файла",  UserPath);
+            
+            //TODO: что делать, если не прочитали пользователя?
         }
     }
 }

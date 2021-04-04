@@ -6,7 +6,9 @@ namespace CodeBlogFitness.CMD
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Вас приветствует приложение CodeBlogFitness");
+            Console.WriteLine("Введите имя пользователя");
+            var name = Console.ReadLine();
         }
     }
 }
