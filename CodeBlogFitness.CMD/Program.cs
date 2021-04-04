@@ -17,9 +17,14 @@ namespace CodeBlogFitness.CMD
             {
                 string genderName = GetGenderName();
                 DateTime birthDate = ParseToDate();
+                // birthDate = birthDate.AddHours(5);
+                // birthDate = birthDate.AddMinutes(5);
+                // birthDate = birthDate.AddSeconds(5);
+                Console.WriteLine(birthDate);
                 double weight = ParseToDouble("вес");
                 double height = ParseToDouble("рост");
                 userController.SetNewUserData(genderName, birthDate, height, weight);
+                Console.WriteLine(userController.CurrentUser.Age);
             }
         }
 

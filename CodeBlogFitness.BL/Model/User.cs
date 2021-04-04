@@ -1,11 +1,15 @@
 ﻿using System;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace CodeBlogFitness.BL.Model
 {
+
+    #region Описание модели 
+    
     /// <summary>
     /// Пользователь
     /// </summary>
+    
+    #endregion
     [Serializable]
     public class User
     {
@@ -39,13 +43,11 @@ namespace CodeBlogFitness.BL.Model
         private DateTime _nowDate = DateTime.Today;
         private int _age;
         
-        public int Age
-        {
-            get => _age;
-            set => _age = value;
-        }
+        public int Age { get; set; }
 
         #endregion
+
+        #region Описание конструктора
 
         /// <summary>
         /// Создать нового пользователя.
@@ -55,12 +57,16 @@ namespace CodeBlogFitness.BL.Model
         /// <param name="birthDate">Дата рождения пользователя.</param>
         /// <param name="weight">Вес пользователя.</param>
         /// <param name="height">Рост пользователя.</param>
+        /// <param name="age">Полных лет.</param>
         /// <exception cref="ArgumentNullException">Выброс исключения при некорректных данных в параметрах.</exception>
+
+        #endregion
         public User(string name,
-            Gender gender,
+            string gender,
             DateTime birthDate,
             double weight,
-            double height)
+            double height,
+            int age)
         {
             #region Условия проверки
 
@@ -72,31 +78,49 @@ namespace CodeBlogFitness.BL.Model
                 throw new ArgumentNullException("Вес не может быть меньше или равен 0.", nameof(weight));
             if (height <= 0)
                 throw new ArgumentNullException("Рост не может быть меньше или равен 0.", nameof(height));
-
+            if (string.IsNullOrWhiteSpace(gender))
+                throw new ArgumentNullException("Пол не может быть null.", nameof(gender));
+            if (age <= 5 || age > 100)
+                throw new ArgumentNullException("Пользователю не может быть меньше 5 лет.", nameof(age));
+            
             #endregion
-            _nowDate = DateTime.Today;
-            _age = _nowDate.Year - BirthDate.Year;
-            if (birthDate > _nowDate.AddYears(-_age)) _age--;
+            
             
             Name = name;
-            Gender = gender ?? throw new ArgumentNullException("Пол не может быть null.", nameof(gender));
+            Gender = new Gender(gender);
             BirthDate = birthDate;
             Weight = weight;
             Height = height;
-            Age = _age;
+            Age = age;
         }
 
+        #region Описание перегрузки конструктора
+
+        /// <summary>
+        /// Перегрузка конструктора.
+        /// </summary>
+        /// <param name="userName">Имя пользователя.</param>
+        /// <exception cref="ArgumentNullException">Если userName не содержит данных.</exception>
+
+        #endregion
         public User(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 throw new ArgumentNullException("Имя не может быть пустым.", nameof(userName));
             Name = userName;
-            _age = _nowDate.Year - BirthDate.Year;
         }
 
+        #region Описание метода
+
+        /// <summary>
+        /// Перегрузка метода Tostring().
+        /// </summary>
+        /// <returns>Строка: имя прльзователя</returns>
+
+        #endregion
         public override string ToString()
         {
-            return $"{Name} {Age}";
+            return $"{Name}";
         }
     }
 }
