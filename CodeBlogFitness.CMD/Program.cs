@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeBlogFitness.BL.Controller;
+using CodeBlogFitness.BL.Model;
 
 namespace CodeBlogFitness.CMD
 {
