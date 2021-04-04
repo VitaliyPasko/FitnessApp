@@ -1,8 +1,1 @@
-/debug
-.idea
-/obj
-.bin/Debug/ref/*dll
-.bin/Debug/ref/*pdb
-.bin/Debug/ref/*deps.json
-.bin/Debug/ref/*.exe
-.bin/Debug/ref/*.runtimeconfig.json
+
