@@ -14,17 +14,17 @@ namespace CodeBlogFitness.BL.Model
         /// <summary>
         /// Имя.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Пол.
         /// </summary>
-        public Gender Gender { get; }
+        public Gender Gender { get; set; }
 
         /// <summary>
         /// Дата рождения.
         /// </summary>
-        public DateTime BirthDate { get; }
+        public DateTime BirthDate { get; set; }
 
         /// <summary>
         /// Вес пользователя.
@@ -35,6 +35,15 @@ namespace CodeBlogFitness.BL.Model
         /// Рост пользователя.
         /// </summary>
         public double Height { get; set; }
+
+        private DateTime _nowDate = DateTime.Today;
+        private int _age;
+        
+        public int Age
+        {
+            get => _age;
+            set => _age = value;
+        }
 
         #endregion
 
@@ -65,17 +74,29 @@ namespace CodeBlogFitness.BL.Model
                 throw new ArgumentNullException("Рост не может быть меньше или равен 0.", nameof(height));
 
             #endregion
-
+            _nowDate = DateTime.Today;
+            _age = _nowDate.Year - BirthDate.Year;
+            if (birthDate > _nowDate.AddYears(-_age)) _age--;
+            
             Name = name;
             Gender = gender ?? throw new ArgumentNullException("Пол не может быть null.", nameof(gender));
             BirthDate = birthDate;
             Weight = weight;
             Height = height;
+            Age = _age;
+        }
+
+        public User(string userName)
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+                throw new ArgumentNullException("Имя не может быть пустым.", nameof(userName));
+            Name = userName;
+            _age = _nowDate.Year - BirthDate.Year;
         }
 
         public override string ToString()
         {
-            return $"{Name} {Gender.Name} {BirthDate} {Weight} {Height}";
+            return $"{Name} {Age}";
         }
     }
 }

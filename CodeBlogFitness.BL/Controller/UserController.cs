@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using CodeBlogFitness.BL.Model;
 
@@ -12,56 +14,109 @@ namespace CodeBlogFitness.BL.Controller
     public class UserController
     {
         /// <summary>
+        /// Путь до файла со списком пользователей
+        /// </summary>
+        private const string UserPath = "users.dat";
+        /// <summary>
+        /// Текущий пользователь.
+        /// </summary>
+        public User CurrentUser { get; }
+        /// <summary>
+        /// Список пользователей.
+        /// </summary>
+        public List<User> Users { get; }
+        /// <summary>
+        /// Контроллер для проверки на валидность данных пользователя
+        /// </summary>
+        private readonly ValidationController _validationController;
+
+        public bool IsNewUser { get; set; } = true;
+        /// <summary>
         /// Создание нового контроллера пользователя.
         /// </summary>
         /// <param name="userName">Имя пользователя.</param>
-        /// <param name="genderName">Пол пользователя.</param>
-        /// <param name="birthDay">Дата рождения пользователя.</param>
-        /// <param name="weight">Вес пользователя.</param>
-        /// <param name="height">Рост пользователя</param>
-        public UserController(string userName, string genderName, DateTime birthDay, double weight, double height)
+        public UserController(string userName)
         {
-            //TODO: проверка
-            User = new User(userName, new Gender(genderName), birthDay, weight, height);
+            _validationController = new ValidationController();
+            if (string.IsNullOrWhiteSpace(userName))
+                throw new ArgumentNullException("имя пользователя не может быть пустым");
+            Users = GetUserData();
+            if (Users.Count != 0)
+            {
+                CurrentUser = Users.SingleOrDefault(u => u.Name == userName) ?? new User(userName);
+                IsNewUser = _validationController.CheckUser(CurrentUser);
+                if (!IsNewUser)
+                {
+                    Users.Add(CurrentUser);
+                    Save();
+                }
+            }
         }
-        /// <summary>
-        /// Пользователь приложения.
-        /// </summary>
-        private const string UserPath = "users.dat";
-        public User User { get; }
+      
         /// <summary>
         /// Сохранить данные пользователя в файл.
         /// </summary>
-        public void Save()
+        private void Save()
         {
             using BinaryWriter writer = new BinaryWriter(File.Open(UserPath, FileMode.Create));
-            writer.Write(User.Name);
-            writer.Write(User.Gender.Name);
-            writer.Write(User.BirthDate.Date.ToString(CultureInfo.InvariantCulture));
-            writer.Write(User.Weight);
-            writer.Write(User.Height);
+            if (Users.Count != 0)
+            {
+                foreach (var user in Users)
+                {
+                    writer.Write(user.Name);
+                    writer.Write(user.Gender.Name);
+                    writer.Write(user.BirthDate.Date.ToString(CultureInfo.InvariantCulture));
+                    writer.Write(user.Weight);
+                    writer.Write(user.Height);
+                }
+            }
         }
         /// <summary>
-        /// Загрузить пользователя из файла.
+        /// Получить список пользователей из файла.
         /// </summary>
-        /// <returns>Пользователь из файла.</returns>
+        /// <returns>Список пользователей.</returns>
         /// <exception cref="FileLoadException">Если файла users.dat нет.</exception>
-        public UserController()
+        private List<User> GetUserData()
         {
-            if (File.Exists(UserPath))
+            try
             {
-                using BinaryReader reader = new BinaryReader(File.Open(UserPath, FileMode.Open));
-                User = new User(
-                    reader.ReadString(),
-                    new Gender(reader.ReadString()),
-                    DateTime.Parse(reader.ReadString()),
-                    reader.ReadDouble(),
-                    reader.ReadDouble());
+                List<User> users = new List<User>();
+                if (File.Exists(UserPath))
+                {
+                    string data = File.ReadAllText(UserPath);
+                    if (data.Trim() != "")
+                    {
+                        using BinaryReader reader = new BinaryReader(File.Open(UserPath, FileMode.Open));
+                        while (reader.PeekChar() > -1)
+                        {
+                            users.Add(new User(
+                                reader.ReadString(),
+                                new Gender(reader.ReadString()),
+                                DateTime.Parse(reader.ReadString()),
+                                reader.ReadDouble(),
+                                reader.ReadDouble()));
+                        }
+                    }
+                }
+                return users;
             }
-            else
-                throw new FileLoadException("Не удалось получить пользователя из файла",  UserPath);
+            catch (FileLoadException e)
+            {
+                Console.WriteLine("Не удалось взять пользователей из файла.");
+                return new List<User>();
+            }
             
-            //TODO: что делать, если не прочитали пользователя?
+        }
+
+        public void SetNewUserData(string genderName, DateTime birthDate, double weight = 1, double height = 1)
+        {
+            //TODO: проверка
+            CurrentUser.Gender = new Gender(genderName);
+            CurrentUser.BirthDate = birthDate;
+            CurrentUser.Weight = weight;
+            CurrentUser.Height = height;
+            Users.Add(CurrentUser);
+            Save();
         }
     }
 }

@@ -11,16 +11,52 @@ namespace CodeBlogFitness.CMD
             Console.WriteLine("Вас приветствует приложение CodeBlogFitness");
             Console.WriteLine("Введите имя пользователя");
             var name = Console.ReadLine();
-            Console.WriteLine("Введите пол");
-            var gender = Console.ReadLine();
-            Console.WriteLine("Введите ДР");
-            var birthDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Введите вес");
-            var weight = double.Parse(Console.ReadLine());
-            Console.WriteLine("Введите рост");
-            var height = double.Parse(Console.ReadLine());
-            var userController = new UserController(name, gender, birthDate, weight, height);
-            userController.Save();
+            var userController = new UserController(name);
+            Console.WriteLine(userController.CurrentUser);
+            if (userController.IsNewUser)
+            {
+                string genderName = GetGenderName();
+                DateTime birthDate = ParseToDate();
+                double weight = ParseToDouble("вес");
+                double height = ParseToDouble("рост");
+                userController.SetNewUserData(genderName, birthDate, height, weight);
+            }
+        }
+
+        private static string GetGenderName()
+        {
+            Console.WriteLine("Введите ваш пол:");
+            while (true)
+            {
+                string genderName = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(genderName))
+                    return genderName;
+                Console.WriteLine("Некорректные данные. Введите снова:");
+            }
+        }
+
+        private static DateTime ParseToDate()
+        {
+            Console.WriteLine("Введите дату рождения в формате (dd.mm.yyyy):");
+            while (true)
+            {
+                bool isCorrectDate = DateTime.TryParse(Console.ReadLine(), out var birthDate);
+                if (isCorrectDate)
+                    return birthDate;
+                Console.WriteLine("Некорректная дата, введите снова:");
+            }
+        }
+
+        private static double ParseToDouble(string value)
+        {
+            Console.WriteLine($"Введите {value}");
+            while (true)
+            {
+                bool isNumber = double.TryParse(Console.ReadLine(), out double input);
+                if (isNumber)
+                    return input;
+                Console.WriteLine("Некорректные данные, введите свой вес снова:");
+            }
         }
     }
 }
