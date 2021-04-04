@@ -1,0 +1,12 @@
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\bin\Debug\net5.0\CodeBlogFitness.BL.deps.json
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\bin\Debug\net5.0\CodeBlogFitness.BL.dll
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\bin\Debug\net5.0\ref\CodeBlogFitness.BL.dll
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\bin\Debug\net5.0\CodeBlogFitness.BL.pdb
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.csprojAssemblyReference.cache
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.GeneratedMSBuildEditorConfig.editorconfig
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.AssemblyInfoInputs.cache
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.AssemblyInfo.cs
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.csproj.CoreCompileInputs.cache
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.dll
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\ref\CodeBlogFitness.BL.dll
+D:\csharp\CodeBlogIntensive\CodeBlogFitness.BL\obj\Debug\net5.0\CodeBlogFitness.BL.pdb
